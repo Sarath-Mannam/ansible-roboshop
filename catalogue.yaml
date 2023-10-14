@@ -51,8 +51,10 @@
       dest: /app
       remote_src: yes # this command is to check that already /tmp/catalogue.zip is presented on catalogue server otherwise it will check in ansible server
 
-      
-
+  - name: install dependencies  # here first ansible will move to /app directory and it run's the npm install command
+    ansible.builtin.command: npm install
+    args: 
+      chdir: /app
 
 
 
