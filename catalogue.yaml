@@ -56,8 +56,8 @@
     args: 
       chdir: /app
 
-  - name: copy catalogue.service
-    ansible.builltin.copy:
+  - name: copy catalogue service
+    ansible.builtin.copy:
       src: catalogue.service
       dest: /etc/systemd/system/catalogue.service
 
