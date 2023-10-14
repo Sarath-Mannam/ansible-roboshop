@@ -45,5 +45,11 @@
       url: https://roboshop-builds.s3.amazonaws.com/catalogue.zip
       dest: /tmp
 
+  - name: extract the catalogue.zip from /tmp directory to /app directory
+    ansible.builtin.unarchive:
+      src: /tmp/catalogue.zip
+      dest: /app
+      
+
 
 
