@@ -6,7 +6,7 @@
     ansible.builtin.shell: "curl -sL https://rpm.nodesource.com/setup_lts.x | bash"
     # sometimes when you don't have a module inside ansible then we can always use this command module
 
-  - name: Install Nodejs
+  - name: Install NodeJS
     ansible.builtin.yum:
       name: nodejs
       state: installed
@@ -30,9 +30,9 @@
       path: /app
     register: directory
 
-  - name: print the directory stat
+  - name: print the directory stats
     ansible.builtin.debug:
-      msg: "Output: {{directory}}"
+      msg: "output: {{directory}}"
 
   - when: directory.stat.exists == False
     name: create /app directory
@@ -40,12 +40,12 @@
       path: /app
       state: directory
 
-  - name: download the ( application code ) / ( catalogue artifact ) to created app directory.
+  - name: download catalogue artifact
     ansible.builtin.get_url:
       url: https://roboshop-builds.s3.amazonaws.com/catalogue.zip
       dest: /tmp
 
-  - name: extract the catalogue.zip from /tmp directory to /app directory
+  - name: extract catalogue artifact
     ansible.builtin.unarchive:
       src: /tmp/catalogue.zip
       dest: /app
