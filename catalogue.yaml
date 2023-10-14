@@ -76,7 +76,7 @@
       state: installed
 
   - name: load catalogue data from mongodb server  
-    ansible.builtin.command: mongo --host mongodb.sarathmannam.online </app/schema/catalogue.js
+    ansible.builtin.command: mongo --host mongodb.sarathmannam.online < /app/schema/catalogue.js
 
   - name: restart catalogue
     ansible.builtin.service:
