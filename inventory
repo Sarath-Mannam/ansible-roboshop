@@ -6,3 +6,6 @@ catalogue.sarathmannam.online
 
 [web]
 web.sarathmannam.online
+
+[redis]
+redis.sarathmannam.online
