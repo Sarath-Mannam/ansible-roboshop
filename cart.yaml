@@ -1,0 +1,78 @@
+- name: Install cart component
+  hosts: cart
+  become: yes
+  tasks:
+  - name: setup NPM source  # Setup NodeJS repos. Vendor is providing a script to setup the repos.
+    ansible.builtin.shell: "curl -sL https://rpm.nodesource.com/setup_lts.x | bash"
+    # sometimes when you don't have a module inside ansible then we can always use this command module
+
+  - name: Install NodeJS
+    ansible.builtin.yum:
+      name: nodejs
+      state: installed
+
+  - name: check roboshop user exist or not
+    # Whenever you want to run linux commands directly i.e in the case ansible module is not available
+    # When the user does not exist, ansible will treat this as failure and comes out by default, So we have to ignore errors.
+    ansible.builtin.command: id roboshop
+    register: output # Here output is name of the variable
+    ignore_errors: true # ansible will proceed even it faces with error at this stage
+    # So Ansible will run this { id roboshop } command and it will store the output in this output variable.
+
+  - when: output.rc != 0 # if this expression is true then only this module will run. 
+    name: create user roboshop  # When user doesnot exit creates the roboshop user based on when output.rc != 0
+    become: yes # give sudo access for this task to create the roboshop user
+    ansible.builtin.user:
+      name: roboshop
+
+  - name: check /app directory exists or not # stat module is used to check the statistics of files and folders
+    ansible.builtin.stat: # When we run this command output will be stored inside directory variable
+      path: /app
+    register: directory
+
+  - name: print the directory stats
+    ansible.builtin.debug:
+      msg: "output: {{directory}}"
+
+  - when: directory.stat.exists == False
+    name: create /app directory
+    ansible.builtin.file:
+      path: /app
+      state: directory
+
+  - name: download cart artifact
+    ansible.builtin.get_url:
+      url: https://roboshop-builds.s3.amazonaws.com/cart.zip
+      dest: /tmp
+
+  - name: extract cart artifact
+    ansible.builtin.unarchive:
+      src: /tmp/cart.zip
+      dest: /app
+      remote_src: yes # this command is to check that already /tmp/cart.zip is presented on cart server otherwise it will check in ansible server
+
+  - name: install dependencies  # here first ansible will move to /app directory and it run's the npm install command
+    ansible.builtin.command: npm install
+    args: 
+      chdir: /app
+
+  - name: copy cart service
+    ansible.builtin.copy:
+      src: cart.service
+      dest: /etc/systemd/system/cart.service
+
+  - name: daemon reload
+    ansible.builtin.systemd:
+      daemon_reload: true
+
+  - name: restart cart
+    ansible.builtin.service:
+      name: cart
+      state: restarted
+      enabled: true
+
+   
+
+
+
+
