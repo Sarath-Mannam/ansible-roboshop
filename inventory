@@ -25,3 +25,6 @@ shipping.sarathmannam.online
 [rabbitmq]
 rabbitmq.sarathmannam.online
 
+[payment]
+payment.sarathmannam.online
+
