@@ -22,3 +22,6 @@ mysql.sarathmannam.online
 [shipping]
 shipping.sarathmannam.online
 
+[rabbitmq]
+rabbitmq.sarathmannam.online
+
